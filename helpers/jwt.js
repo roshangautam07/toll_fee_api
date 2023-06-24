@@ -6,6 +6,7 @@ export   function generateJwtToken(user) {
     return Jwt.sign(
       {
         id: user.id,
+        sub:user.id,
       },
       dbConfig.secret,
       { expiresIn: dbConfig.accessTokenExpire }
