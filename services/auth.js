@@ -11,7 +11,6 @@ export const authenticate = async ({ email, password }) => {
                 user_type: 'collector',
             },
         });
-        console.log('use',user)
     
         if (!user || !(await compare(password, user.password))) {
             throw customError(FORBIDDEN, 'User credential is incorrect');

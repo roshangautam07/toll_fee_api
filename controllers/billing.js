@@ -31,6 +31,7 @@ export const billDetails = async (req, res, next) => {
             billingDetails: billingDetails.map(d => billDetail(d))
         })
     } catch (error) {
+        console.log(error)
         next(error);
     }
 }
