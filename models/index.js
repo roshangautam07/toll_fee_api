@@ -5,6 +5,7 @@ import BillingCategory from '././billingCategory.js'
 import FiscalYear from './fiscalYear.js';
 import Billing from './billing.js'
 import BillingDetails from './billingDetails.js';
+import BillReturn from './billiReturn.js';
 import sequelize from '../config/mysql.js';
 sequelize.authenticate()
   .then(() => {
@@ -62,6 +63,23 @@ db.Billing.hasOne(db.BillingDetails, {
     field: 'billing_id',
   },
 })
+
+db.BillReturn = BillReturn(sequelize, Sequelize);
+
+db.BillReturn.belongsTo(db.Billing, {
+  foreignKey: {
+    name: 'billing_id',
+    field: 'billing_id',
+  },
+})
+
+db.Billing.hasOne(db.BillReturn, {
+  foreignKey: {
+    name: 'billing_id',
+    field: 'billing_id',
+  },
+})
+
 
 
 

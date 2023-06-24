@@ -62,3 +62,27 @@ export async function getBillList(id, search_query, limit, offset) {
     return billing
     
 }
+
+export async function getSingleBillDetails(id) {
+    const billingInfo = await db.Billing.findOne({
+        where: {
+            id: id
+        },
+        attributes:['id','serial_no','total','gross_amount','vehicle_no','tender_amount'],
+        include: [{
+            model: db.BillReturn,
+            attributes: [['id', 'is_cancelled']]
+        }]
+    });
+    const billingDetails = await db.BillingDetails.findAll({
+        where: {
+            billing_id: id,
+        },
+            include: {
+                model: db.BillingCategory,
+                attributes: ['title',]
+            }
+        
+    })
+    return {billingInfo,billingDetails};
+}

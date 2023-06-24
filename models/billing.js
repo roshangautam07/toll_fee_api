@@ -18,6 +18,10 @@ export default function Billing(sequelize, Sequelize) {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
+            vehicle_no: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
             serial_no: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
