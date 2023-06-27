@@ -21,6 +21,8 @@ db.Users = User(sequelize, Sequelize);
 db.Branch = Branch(sequelize, Sequelize);
 db.BillingCategory = BillingCategory(sequelize, Sequelize);
 
+
+
 db.BillingCategory.belongsTo(db.Branch, {
   foreignKey: {
     name: 'branch_id',
@@ -77,6 +79,19 @@ db.Billing.hasOne(db.BillReturn, {
   foreignKey: {
     name: 'billing_id',
     field: 'billing_id',
+  },
+})
+
+db.Billing.belongsTo(db.Users, {
+  foreignKey: {
+    name: 'user_id',
+    field: 'user_id',
+  },
+});
+db.Users.hasMany(db.Billing, {
+  foreignKey: {
+    name: 'user_id',
+    field: 'user_id',
   },
 })
 

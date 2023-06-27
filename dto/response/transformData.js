@@ -29,3 +29,14 @@ export const billDetail = (data) => {
        
     }
 }
+
+export const singleBillInfo = (data) => {
+    // const { dataValues } = data;
+    // const { bill_return: { dataValues: dataV = {} },...rest} = dataValues
+    // // const { bill_return: { is_cancelled = {}}, ...rest } = dataValues;
+    const datas = data;
+    const { id, serial_no, total, gross_amount, vehicle_no, tender_amount } = datas;
+    return {
+        id, serial_no, total, gross_amount, vehicle_no, tender_amount,is_cancelled:datas['bill_return.is_cancelled']
+    }
+}

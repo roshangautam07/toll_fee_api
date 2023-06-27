@@ -14,20 +14,65 @@ export default function Billing(sequelize, Sequelize) {
                     key: 'id',
                 },
             },
+            branch_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'users',
+                    key: 'id',
+                },
+            },
+            customer_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            fiscal_year: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             date_np: {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            vehicle_no: {
+            goods_receiver: {
                 type: Sequelize.STRING,
                 allowNull: false,
+            },
+            gross_amount: {
+                type: Sequelize.DOUBLE(8,2),
+                allowNull: false,
+            },
+            tender_amount: {
+                type: Sequelize.DOUBLE(8,2),
+                allowNull: false,
+            },
+            vat_amount: {
+                type: Sequelize.DOUBLE(8,2),
+                allowNull: true,
+            },
+            total: {
+                type: Sequelize.DOUBLE(8,2),
+                allowNull: true,
+            },
+            vehicle_no: {
+                type: Sequelize.STRING,
+                allowNull: true,
             },
             serial_no: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            payment_mode: {
+                type: Sequelize.ENUM,
+                values: [
+                    'cash',
+                    'fonepay'
+                ],
+                defaultValue: 'cash',
+                allowNull: false,
+            },
             created_at: {
-                type: 'TIMESTAMP',
+                type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             updated_at: {

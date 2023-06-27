@@ -1,8 +1,8 @@
 import { apiResponse } from "../dto/response/apiResponse.js";
-import { billDetail, billingData } from "../dto/response/transformData.js";
+import { billDetail, billingData,singleBillInfo } from "../dto/response/transformData.js";
 import { SUCCESS } from "../helpers/constants/responseStatusCode.js";
 import { getPagination, paginate } from "../helpers/pagination.js";
-import { getBillList, getSingleBillDetails } from "../services/billing.js";
+import { getBillList, getSingleBillDetails, storeBill } from "../services/billing.js";
 
 export const billList = async (req, res, next) => {
     try {
@@ -26,12 +26,24 @@ export const billDetails = async (req, res, next) => {
         }
     const {billingInfo,billingDetails} = await getSingleBillDetails(req.body?.billing_id);
         return apiResponse(res, SUCCESS, 'Success', null, {
-            billingInfo,
+            billingInfo:singleBillInfo(billingInfo),
+            // billingInfo,
             // billingDetails
             billingDetails: billingDetails.map(d => billDetail(d))
         })
     } catch (error) {
         console.log(error)
         next(error);
+    }
+}
+
+export const store = async (req, res, next) => {
+    try {
+    const bill = await storeBill(req.body,req.user.id);
+        return apiResponse(res, SUCCESS, 'Success', 'Bill created successfully', bill);
+    } catch (error) {
+        console.log(error);
+        next(error);
+        
     }
 }
