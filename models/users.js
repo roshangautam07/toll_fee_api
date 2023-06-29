@@ -88,6 +88,10 @@ export default function Users(sequelize, Sequelize) {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            collection_center_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             user_type: {
                 type: Sequelize.ENUM,
                 allowNull: false,

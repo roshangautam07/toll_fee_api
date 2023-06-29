@@ -22,6 +22,10 @@ export default function Billing(sequelize, Sequelize) {
                     key: 'id',
                 },
             },
+            collection_center_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             customer_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false

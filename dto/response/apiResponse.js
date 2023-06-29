@@ -20,3 +20,7 @@ export function responseJsonWithhData(res, statusCode,status, message, data = []
 export function apiResponse(res,statusCode, status, message = "null", data) {
   return res.status(statusCode).json({status, message, data });
 }
+
+export function errorResponse(res, statusCode, status, message = "Error", data) {
+  return res.status(statusCode).json({ status, message, data });
+}

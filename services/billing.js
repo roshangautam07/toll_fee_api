@@ -16,6 +16,7 @@ export async function countTodayCollectedBill(id) {
     return noOfBill;
 }
 export const findBillById = async (id) => await db.Billing.findByPk(id);
+export const findBillingDetailsById = async (id) => await db.BillingDetails.findOne({ where: { billing_id: id } });
 
 export async function getTodaysTotalAmountReceived(id) {
     const data = await sequelize.query(`select
@@ -106,13 +107,16 @@ async function retriveCreatedBill(id) {
 	billing.payment_mode,
 	billing.serial_no,
 	users.name as billing_by,
-	branches.branch_title as road_section
+	branches.branch_title as road_section,
+    collection_center.name as collection_center
 from
 	billing
 inner join users on
 	users.id = billing.user_id
 inner join branches on
 	branches.id = billing.branch_id
+    inner join collection_center on
+	collection_center.id = billing.collection_center_id
 where
 	billing.id =${id}`);
     return bill;
@@ -153,7 +157,8 @@ export async function storeBill(data, id) {
             tender_amount: data.tender_amount,
             total: data.tender_amount,
             vat_amount: data.vat_amount,
-            vehicle_no: data.vehicle_no
+            vehicle_no: data.vehicle_no,
+            collection_center_id:user?.collection_center_id
         }
 
         console.log(payload);

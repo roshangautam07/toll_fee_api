@@ -6,6 +6,7 @@ import FiscalYear from './fiscalYear.js';
 import Billing from './billing.js'
 import BillingDetails from './billingDetails.js';
 import BillReturn from './billiReturn.js';
+import BillReturnDetails from './billReturnDetails.js';
 import sequelize from '../config/mysql.js';
 sequelize.authenticate()
   .then(() => {
@@ -20,6 +21,7 @@ const db = {};
 db.Users = User(sequelize, Sequelize);
 db.Branch = Branch(sequelize, Sequelize);
 db.BillingCategory = BillingCategory(sequelize, Sequelize);
+db.BillReturnDetails = BillReturnDetails(sequelize, Sequelize);
 
 
 
@@ -92,6 +94,18 @@ db.Users.hasMany(db.Billing, {
   foreignKey: {
     name: 'user_id',
     field: 'user_id',
+  },
+})
+db.BillReturnDetails.belongsTo(db.BillReturn, {
+  foreignKey: {
+    name: 'billing_return_id',
+    field: 'billing_return_id',
+  },
+})
+db.BillReturn.hasOne(db.BillReturnDetails, {
+  foreignKey: {
+    name: 'billing_return_id',
+    field: 'billing_return_id',
   },
 })
 

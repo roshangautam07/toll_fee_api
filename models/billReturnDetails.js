@@ -2,15 +2,15 @@
 import bcrypt from 'bcryptjs';
 // const User = Db.user;
 /* eslint-disable camelcase */
-export default function BillReturn(sequelize, Sequelize) {
-    const BillReturn = sequelize.define(
-        'bill_returns',
+export default function BillReturnDetails(sequelize, Sequelize) {
+    const BillReturnDetails = sequelize.define(
+        'bill_return_details',
         {
-            user_id: {
+            billing_return_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'users',
+                    model: 'bill_returns',
                     key: 'id',
                 },
             },
@@ -22,48 +22,20 @@ export default function BillReturn(sequelize, Sequelize) {
                     key: 'id',
                 },
             },
-            branch_id: {
+            billing_category_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'branches',
+                    model: 'billing_categories',
                     key: 'id',
                 },
             },
-            customer_id: {
+            quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            date_np: {
-                type: Sequelize.STRING,
-                allowNull: false,
-            },
-            gross_amount: {
+            billing_amount: {
                 type: Sequelize.DOUBLE(8,2),
-                allowNull: false,
-            },
-            tender_amount: {
-                type: Sequelize.DOUBLE(8,2),
-                allowNull: false,
-            },
-            vat_amount: {
-                type: Sequelize.DOUBLE(8,2),
-                allowNull: true,
-            },
-            total: {
-                type: Sequelize.DOUBLE(8,2),
-                allowNull: true,
-            },
-            goods_receiver: {
-                type: Sequelize.STRING,
-                allowNull: true,
-            },
-            fiscal_year: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            serial_no: {
-                type: Sequelize.INTEGER,
                 allowNull: false,
             },
             created_at: {
@@ -78,8 +50,8 @@ export default function BillReturn(sequelize, Sequelize) {
         {
             freezeTableName: true,
             // define the table's name
-            tableName: 'bill_returns'
+            tableName: 'bill_return_details'
         }
     );
-    return BillReturn;
+    return BillReturnDetails;
 };
