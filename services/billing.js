@@ -137,13 +137,28 @@ where
     return bill;
 }
 export async function storeBill(data, id) {
+    const { billingCategory ={} } = data;
     let transaction = await sequelize.transaction();
-
     try {
         const maxBilling = await db.Billing.max('id');
         console.log('MSX',maxBilling)
         const user = await getOneUser(id);
         const fiscalYear = await getCurrentFiscalYear();
+        if (data.billingCategory.length < 0) {
+            new Error('Invalid request')
+        }
+        const billingCategories = await db.BillingCategory.findOne({
+            attributes: ['rate'],
+            where: {
+                id: billingCategory[0]?.billing_category_id,
+                status: 'active',
+                branch_id: user?.branch_id,
+                
+            }
+        });
+        if (billingCategories?.length < 0) {
+            new Error('Invalid request')
+        }
         const payload = {
             user_id: id,
             branch_id: user?.branch_id,
@@ -153,17 +168,17 @@ export async function storeBill(data, id) {
             customer_id: 1,
             goods_receiver: 'none',
             payment_mode: data.payment_mode,
-            gross_amount: data.gross_amount,
-            tender_amount: data.tender_amount,
-            total: data.tender_amount,
-            vat_amount: data.vat_amount,
+            gross_amount: billingCategories?.rate,
+            tender_amount: billingCategories?.rate,
+            total: billingCategories?.rate,
+            vat_amount: 0,
             vehicle_no: data.vehicle_no,
             collection_center_id:user?.collection_center_id
         }
 
-        console.log(payload);
+        const {billing_amount,...rest} = data.billingCategory[0];
         const bill = await db.Billing.create(payload);
-        bill.createBilling_detail(data.billingCategory[0]);
+        bill.createBilling_detail({...rest,billing_amount:billingCategories?.rate});
         await transaction.commit();
         const billing_details = await retriveCreatedBill(bill?.id);
         const bill_information = await retriveCreatedBillingDetails(bill?.id)
