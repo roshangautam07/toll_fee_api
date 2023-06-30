@@ -16,6 +16,7 @@ export async function countTodayCollectedBill(id) {
     return noOfBill;
 }
 export const findBillById = async (id) => await db.Billing.findByPk(id);
+export const findBillByMultipleCondition = async (obj) => await db.Billing.findOne({ where: obj });
 export const findBillingDetailsById = async (id) => await db.BillingDetails.findOne({ where: { billing_id: id } });
 
 export async function getTodaysTotalAmountReceived(id) {

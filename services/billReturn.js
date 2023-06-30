@@ -1,6 +1,6 @@
 import { currentNepaliDate } from "../helpers/date.js";
 import db from "../models/index.js"
-import { findBillById, findBillingDetailsById } from "./billing.js";
+import { findBillById, findBillByMultipleCondition, findBillingDetailsById } from "./billing.js";
 const { sequelize, QueryTypes, Sequelize } = db;
 
 
@@ -20,14 +20,15 @@ const responseQuery = async (id) => {
     return data;
 };
 
-export async function returnBill(data) {
+export async function returnBill(data,user_id) {
     let transaction = await sequelize.transaction();
     try {
         console.log(data);
         const returns = await db.BillReturn.max('crn');
         const crn = returns ? returns + 1 : 1;
         const bill = await findBillById(data?.billing_id);
-        if (!bill) {
+        const bills = await findBillByMultipleCondition({id:data?.billing_id,user_id:user_id})
+        if (!bills) {
             throw new Error('Bill not found');
         }
         const billReturn = await findBillReturnById(data?.billing_id);
