@@ -66,12 +66,12 @@ export async function returnBill(data) {
             billing_amount: billDetails?.billing_amount
         };
         rbill.createBill_return_detail(detailsPayload)
-        const res = await responseQuery(rbill.id);
-        console.log(res)
+        // const res = await responseQuery(rbill.id);
+        // console.log(res)
         await transaction.commit();
 
         // await transaction.rollback();
-        return rbill;
+        return {is_cancelled:bill?.tender_amount};
 
     } catch (error) {
         await transaction.rollback();
