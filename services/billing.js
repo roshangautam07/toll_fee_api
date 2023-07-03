@@ -137,6 +137,15 @@ where
 	billing_id = ${id}`);
     return bill;
 }
+
+Object.size = function(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
 export async function storeBill(data, id) {
     const { billingCategory ={} } = data;
     let transaction = await sequelize.transaction();
@@ -179,7 +188,12 @@ export async function storeBill(data, id) {
 
         const {billing_amount,...rest} = data.billingCategory[0];
         const bill = await db.Billing.create(payload);
-        bill.createBilling_detail({...rest,billing_amount:billingCategories?.rate});
+        bill.createBilling_detail({ ...rest, billing_amount: billingCategories?.rate });
+        
+        if (Object.size(data?.transactionInfo) > 0 && bill?.payment_mode == 'fonePay') {
+            bill.createTransaction_info(data.transactionInfo);
+        }
+
         await transaction.commit();
         const billing_details = await retriveCreatedBill(bill?.id);
         const bill_information = await retriveCreatedBillingDetails(bill?.id)

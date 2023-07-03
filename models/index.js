@@ -7,6 +7,7 @@ import Billing from './billing.js'
 import BillingDetails from './billingDetails.js';
 import BillReturn from './billiReturn.js';
 import BillReturnDetails from './billReturnDetails.js';
+import TransactionInfo from './TransactionInfo.js';
 import sequelize from '../config/mysql.js';
 sequelize.authenticate()
   .then(() => {
@@ -22,7 +23,7 @@ db.Users = User(sequelize, Sequelize);
 db.Branch = Branch(sequelize, Sequelize);
 db.BillingCategory = BillingCategory(sequelize, Sequelize);
 db.BillReturnDetails = BillReturnDetails(sequelize, Sequelize);
-
+db.TransactionInfo = TransactionInfo(sequelize, Sequelize);
 
 
 db.BillingCategory.belongsTo(db.Branch, {
@@ -108,6 +109,20 @@ db.BillReturn.hasOne(db.BillReturnDetails, {
     field: 'billing_return_id',
   },
 })
+
+db.Billing.hasOne(db.TransactionInfo, {
+  foreignKey: {
+    name: 'billing_id',
+    field: 'billing_id',
+  },
+})
+
+db.TransactionInfo.belongsTo(db.Billing, {
+  foreignKey: {
+    name: 'billing_id',
+    field: 'billing_id',
+  },
+});
 
 
 
