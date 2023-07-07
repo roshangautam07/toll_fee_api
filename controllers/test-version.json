@@ -1,0 +1,6 @@
+{
+    "apkUrl": "http://192.168.1.69:3001/api/download/toll-fee-2.0.apk",
+    "forceUpdate": false,
+    "versionCode": "2",
+    "versionName": "2.0"
+}

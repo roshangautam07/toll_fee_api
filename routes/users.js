@@ -1,4 +1,5 @@
 import express from 'express';
+import { appUpdate, downloadAPK } from '../controllers/updateController.js';
 import { getUser } from '../controllers/user.js';
 import authorization from '../middleware/authorization.js';
 import { methodNotAllowed } from '../middleware/methodNotAllowed.js';
@@ -11,5 +12,11 @@ export default function usersRouter(express){
     .route('/get_user')
     .get(authorization(),getUser)
     .all(methodNotAllowed);
+  router
+  .route('/update/:id')
+    .get(appUpdate);
+  router
+    .route('/download/:id')
+    .get(downloadAPK);
   return router;
 }

@@ -1,5 +1,5 @@
 /node_modules
 .env
 coverage
-/app/public/uploads/
-/app/public/frontend/*
+#/app/public/uploads/
+#/app/public/frontend/*
