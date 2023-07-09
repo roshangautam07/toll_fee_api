@@ -9,6 +9,7 @@ import BillReturn from './billiReturn.js';
 import BillReturnDetails from './billReturnDetails.js';
 import TransactionInfo from './TransactionInfo.js';
 import sequelize from '../config/mysql.js';
+import AppDeployment from './appDeployment.js';
 sequelize.authenticate()
   .then(() => {
     console.log('\x1b[32m', 'DB connected', '\x1b[0m');
@@ -39,6 +40,7 @@ db.Branch.hasMany(db.BillingCategory, {
   },
 })
 
+db.AppDeployment = AppDeployment(sequelize, Sequelize);
 db.FiscalYear = FiscalYear(sequelize, Sequelize);
 db.Billing = Billing(sequelize, Sequelize);
 db.BillingDetails = BillingDetails(sequelize, Sequelize);

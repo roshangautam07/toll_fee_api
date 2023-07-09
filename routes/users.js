@@ -1,5 +1,5 @@
 import express from 'express';
-import { appUpdate, downloadAPK } from '../controllers/updateController.js';
+import { appUpdate, downloadAPK, uploadApk } from '../controllers/updateController.js';
 import { getUser } from '../controllers/user.js';
 import authorization from '../middleware/authorization.js';
 import { methodNotAllowed } from '../middleware/methodNotAllowed.js';
@@ -18,5 +18,8 @@ export default function usersRouter(express){
   router
     .route('/download/:id')
     .get(downloadAPK);
+  router
+    .route('/upload')
+    .post(uploadApk);
   return router;
 }
