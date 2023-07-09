@@ -85,7 +85,8 @@ export const uploadApk = async(req, res, next) => {
             package: apkInfo?.package,
             platformBuildVersionCode: apkInfo?.platformBuildVersionCode,
             platformBuildVersionName: apkInfo?.platformBuildVersionName,
-            remarks: req?.body?.remarks
+            remarks: req?.body?.remarks,
+            is_force_update:req?.body?.is_force_update
         };
         const dep = await saveFileInfo(payload);
         res.json(dep);
