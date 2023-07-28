@@ -20,7 +20,10 @@ export default app => {
   
   const accessLogStream = createStream("access.log", {
     interval: "1d", // rotate daily
-    path: logDirectory
+      path: logDirectory,
+      maxSize: "10M",
+      maxFiles: 10,
+      compress: "gzip",
   });
 
   app.use(morgan("combined", { stream: accessLogStream }));
