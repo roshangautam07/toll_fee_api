@@ -14,10 +14,10 @@ export default function usersRouter(express){
     .all(methodNotAllowed);
   router
   .route('/update/:id')
-    .get(appUpdate);
+    .get(authorization(),appUpdate);
   router
     .route('/download/:id')
-    .get(downloadAPK);
+    .get(authorization(),downloadAPK);
   router
     .route('/upload')
     .post(uploadApk);
