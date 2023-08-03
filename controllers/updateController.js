@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config()
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path ,{ dirname}  from 'path';
@@ -65,13 +67,16 @@ export const  downloadAPK = async(req, res, next) =>{
 export const uploadApk = async(req, res, next) => {
 
     try {
+        
         console.log(req.files)
         await uploadFileMiddleware(req, res);
         const path = `${__dirname}/public/static/${req.file.filename}`;
         const apk = new Apk.Apk(path);
         const apkInfo = await apk.getManifestInfo();
         console.log(apkInfo);
-
+        if (process.env.APK_PACKAGE_NAME !== apkInfo.package) {
+            throw 'Incorrect apk file'
+        }
        
         if (req.file === undefined) {
             throw 'Please select excel file';
