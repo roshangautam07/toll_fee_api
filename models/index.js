@@ -10,6 +10,16 @@ import BillReturnDetails from './billReturnDetails.js';
 import TransactionInfo from './TransactionInfo.js';
 import sequelize from '../config/mysql.js';
 import AppDeployment from './appDeployment.js';
+import fs from 'fs';
+import { systemCurrentState } from '../helpers/filehelper.js';
+import { filePath } from '../cli/maintenance.js';
+systemCurrentState(fs, filePath, function (data) {
+  console.log('db', typeof data?.maintenance);
+  if (typeof data?.maintenance == 'boolean' && data?.maintenance == true) {
+    console.log('\x1b[41m', 'System is under maintainance', '\x1b[0m');
+    process.exit(1);
+  }
+});
 sequelize.authenticate()
   .then(() => {
     console.log('\x1b[32m', 'DB connected', '\x1b[0m');

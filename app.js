@@ -11,11 +11,17 @@ import errorHandler from './middleware/errorHandller.js';
 import notFound from './middleware/notFound.js';
 import bodyParser from 'body-parser';
 import logger from './helpers/logger.js';
+import { systemCurrentState } from './helpers/filehelper.js';
+import fs from 'fs';
+import { filePath } from './cli/maintenance.js';
+import helmet from 'helmet';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 var app = express();
+// enabling the Helmet middleware
+app.use(helmet())
 logger(app);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,7 +40,16 @@ app.use(
       extended: true,
   })
 );
+app.use((req, res, next) => {
+  systemCurrentState(fs, filePath, function (data) {
+    if (typeof data?.maintenance == 'boolean' && data?.maintenance == true) {
+   res.status(503).json({message:'System is under maintainance'})
+    }
+    next();
+  })
+})
 routes(app, express);
+
 app.disable('x-powered-by');
 app.use(errorHandler);
 app.use(notFound);
