@@ -7,6 +7,7 @@ import * as url from 'url';
 import Apk from "node-apk";
 import uploadFileMiddleware from '../middleware/apkUploader.js';
 import { getLastDeployment, saveFileInfo } from '../services/appDeploymentService.js';
+import { updateRequest } from '../dto/request/updateRequest.js';
     const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('..', import.meta.url));
 const __dirnames = url.fileURLToPath(new URL('.', import.meta.url));
@@ -67,7 +68,10 @@ export const  downloadAPK = async(req, res, next) =>{
 export const uploadApk = async(req, res, next) => {
 
     try {
-        
+        console.log(req.headers?.token);
+        if (req?.headers?.token != process.env.APK_UPLOAD_KEY) {
+            throw 'Unauthorized access'
+        }
         console.log(req.files)
         await uploadFileMiddleware(req, res);
         const path = `${__dirname}/public/static/${req.file.filename}`;
@@ -81,19 +85,7 @@ export const uploadApk = async(req, res, next) => {
         if (req.file === undefined) {
             throw 'Please select excel file';
         }
-        const payload = {
-            app_name: req?.file?.filename,
-            versionCode: apkInfo?.versionCode,
-            versionName: apkInfo?.versionName,
-            compileSdkVersion: apkInfo?.compileSdkVersion,
-            compileSdkVersionCodename: apkInfo?.compileSdkVersionCodename,
-            package: apkInfo?.package,
-            platformBuildVersionCode: apkInfo?.platformBuildVersionCode,
-            platformBuildVersionName: apkInfo?.platformBuildVersionName,
-            remarks: req?.body?.remarks,
-            is_force_update:req?.body?.is_force_update
-        };
-        const dep = await saveFileInfo(payload);
+        const dep = await saveFileInfo(updateRequest(req, apkInfo));
         res.json(dep);
     } catch (error) {
         next(error)
