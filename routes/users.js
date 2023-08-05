@@ -14,7 +14,7 @@ export default function usersRouter(express){
     .all(methodNotAllowed);
   router
   .route('/update/:id')
-    .get(appUpdate);
+    .get(authorization(),appUpdate);
   router
     .route('/download/:id')
     .get(downloadAPK);
