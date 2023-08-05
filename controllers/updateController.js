@@ -78,6 +78,9 @@ export const uploadApk = async(req, res, next) => {
         const apk = new Apk.Apk(path);
         const apkInfo = await apk.getManifestInfo();
         console.log(apkInfo);
+        const other = JSON.stringify(apkInfo.raw);
+        console.log(JSON.parse(other));
+        // console.log(JSON.stringify(apkInfo.raw, null, 4));
         if (process.env.APK_PACKAGE_NAME !== apkInfo.package) {
             throw 'Incorrect apk file'
         }
