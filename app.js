@@ -15,13 +15,18 @@ import { systemCurrentState } from './helpers/filehelper.js';
 import fs from 'fs';
 import { filePath } from './cli/maintenance.js';
 import helmet from 'helmet';
+import next from 'next';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const dev = process.env.NODE_ENV !== 'production';
+const apps = next({ dev });
+const handle = apps.getRequestHandler();
+apps.prepare().then(() => {
+  
 var app = express();
 // enabling the Helmet middleware
-app.use(helmet())
+// app.use(helmet())
 logger(app);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,6 +45,7 @@ app.use(
       extended: true,
   })
 );
+  
 app.use((req, res, next) => {
   systemCurrentState(fs, filePath, function (data) {
     if (typeof data?.maintenance == 'boolean' && data?.maintenance == true) {
@@ -48,8 +54,35 @@ app.use((req, res, next) => {
     next();
   })
 })
-routes(app, express);
 
+  routes(app, express);
+  app.get('/', (req, res) => {
+    return apps.render(req, res, `/main`, req.query)
+  })
+app.get('/forms', (req, res) => {
+  return apps.render(req, res, `/form`);
+})
+app.get('/list-user', (req, res) => {
+  const datas = [{
+     id: 1,
+     name: 'roshan'
+  }, {
+     id: 2,
+     name: 'gautam'
+  }, {
+     id: 3,
+     name: 'roh'
+  }];
+  //console.log(data)
+  res.pageParams = {
+      value: datas
+  };
+  res.data = datas;
+  return apps.render(req, res, '/list')
+})
+app.get('*', (req, res) => {
+  return apps.render(req, res, `${req.path}`, req.query)
+})
 app.disable('x-powered-by');
 app.use(errorHandler);
 app.use(notFound);
@@ -57,15 +90,13 @@ app.use(notFound);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-app.get('/', (req, res) => {
-  res.json('hello')
 
-})
 
 
 const PORTS = process.env.PORT || 3000
 app.listen(PORTS,'0.0.0.0', () => {
   console.log(`Server is running on port ${PORTS}.`);
 });
+})
 
-export default app;
+// export default app;
