@@ -4,3 +4,4 @@
 coverage
 /public/static/
 /public/frontend/*
+.next

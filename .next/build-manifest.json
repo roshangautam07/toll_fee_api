@@ -35,6 +35,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/list.js"
     ],
+    "/load_data_via_api": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/load_data_via_api.js"
+    ],
     "/main": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
