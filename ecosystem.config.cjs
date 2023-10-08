@@ -32,7 +32,7 @@ module.exports = {
       ref  : 'origin/main',
       repo: 'https://github.com/roshangautam07/toll_fee_api.git',
       ref: "origin/jitpur-app-deployment",
-      path : '/var/www/html/toll_fee_api',
+      path: '/var/www/html/deploy',
       'pre-deploy-local': '',
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.cjs --env production',
       'pre-setup': ''
