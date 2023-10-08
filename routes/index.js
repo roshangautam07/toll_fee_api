@@ -7,9 +7,9 @@ import billReturnRouter from "./billReturn.js";
 
 export default function routes(app, express) {
   app.use('/api', usersRouter(express));
-  app.use('/api', authRouter(express));
-  app.use('/api', dashRouter(express));
-  app.use('/api',billRouter(express));
-  app.use('/api',billReturnRouter(express));
+  // app.use('/api', authRouter(express));
+  // app.use('/api', dashRouter(express));
+  // app.use('/api',billRouter(express));
+  // app.use('/api',billReturnRouter(express));
   
 }

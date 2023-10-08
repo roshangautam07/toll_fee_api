@@ -11,9 +11,27 @@ import { updateRequest } from '../dto/request/updateRequest.js';
     const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('..', import.meta.url));
 const __dirnames = url.fileURLToPath(new URL('.', import.meta.url));
+import db from '../models/index.js';
     
 
-export const appUpdate = async(req, res, next) => {
+export const appUpdate = async (req, res, next) => {
+    try {
+        
+    
+    // const { deviceId } = req.params;
+    const deviceId = req.headers;
+        console.log('DEVICE', deviceId.deviceid)
+        const device = deviceId.deviceid ?? 1;
+        const deviceList = await db.DeviceInformation.findOne({
+            where: {
+                serial_number: device,
+                status:'active'
+            }
+        });
+        if (!deviceList) {
+            return res.json({message:'No update avaliable'})
+        }
+   
     const response = {
         apkUrl: "http://143.110.254.245:9006/api/download/toll-fee-2.0.apk",
         forceUpdate: false,
@@ -34,7 +52,10 @@ export const appUpdate = async(req, res, next) => {
     //     return res.json(RE);
 
     // });
-    return res.json(responseData);
+        return res.json(responseData);
+    } catch (error) {
+        next(error);
+    }
 }
 
 export const  downloadAPK = async(req, res, next) =>{

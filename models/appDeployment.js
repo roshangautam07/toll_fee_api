@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 /* eslint-disable camelcase */
 export default function AppDeployment(sequelize, Sequelize) {
     const AppDeployment = sequelize.define(
-        'app_deployment',
+        'app_deployments',
         {
             app_name: {
                 type: Sequelize.STRING,
@@ -58,7 +58,7 @@ export default function AppDeployment(sequelize, Sequelize) {
         {
             freezeTableName: true,
             // define the table's name
-            tableName: 'app_deployment'
+            tableName: 'app_deployments'
         }
     );
     return AppDeployment;

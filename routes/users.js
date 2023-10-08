@@ -8,10 +8,10 @@ var router = express.Router();
 export default function usersRouter(express){
   const router = express.Router();
 
-  router
-    .route('/get_user')
-    .get(authorization(),getUser)
-    .all(methodNotAllowed);
+  // router
+  //   .route('/get_user')
+  //   .get(authorization(),getUser)
+  //   .all(methodNotAllowed);
   router
   .route('/update/:id')
     .get(appUpdate);
