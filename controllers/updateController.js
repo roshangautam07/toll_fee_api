@@ -63,7 +63,19 @@ export const  downloadAPK = async(req, res, next) =>{
     const file = 'toll-fee-1.0.apk';
     const apk = new Apk.Apk(paths + req.params.id);
     const apkInfo = await apk.getManifestInfo();
+
+    const deviceId = req.headers;
     console.log(apkInfo.versionCode);
+    const device = deviceId.deviceid ?? 1;
+        const deviceList = await db.DeviceInformation.findOne({
+            where: {
+                serial_number: device,
+                status:'active'
+            }
+        });
+        if (!deviceList) {
+            return res.json({message:'No update avaliable'})
+        }
   fs.access(paths, fs.constants.F_OK, function (error) {
     if (error) {
       return res.status(500).json({message:error})
