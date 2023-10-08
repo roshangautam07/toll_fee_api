@@ -31,7 +31,7 @@ module.exports = {
       repo : 'https://github.com/roshangautam07/toll_fee_api.git',
       path : '/var/www/html/toll_fee_api',
       'pre-deploy-local': '',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'npm install && pm2 reload ecosystem.config.cjs --env production',
       'pre-setup': ''
     }
   }
