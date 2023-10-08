@@ -28,7 +28,7 @@ module.exports = {
       user : 'root',
       host: '143.110.254.245',
       // path to the public key to authenticate
-      key: "~/.ssh/deploy_rsa.pub",
+      key: "~/.ssh/id_rsa.pub",
       ref  : 'origin/main',
       repo: 'https://github.com/roshangautam07/toll_fee_api.git',
       ref: "origin/jitpur-app-deployment",
