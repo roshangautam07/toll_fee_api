@@ -15,9 +15,12 @@ module.exports = {
     name: "toll_fee",
     instances: 4,
     exec_mode: "cluster",
-  //   env_production : {
-  //     NODE_ENV : "production"
-  // }
+    env: {
+      NODE_ENV: 'development'
+    },
+    env_production : {
+      NODE_ENV : "production"
+  }
   }],
 //pm2 start app.js --watch --ignore-watch="public"
   deploy : {
