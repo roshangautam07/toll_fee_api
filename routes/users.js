@@ -1,5 +1,5 @@
 import express from 'express';
-import { appUpdate, downloadAPK, uploadApk } from '../controllers/updateController.js';
+import { appUpdate, downloadAPK, remoteLogOut, uploadApk } from '../controllers/updateController.js';
 import { getUser } from '../controllers/user.js';
 import authorization from '../middleware/authorization.js';
 import { methodNotAllowed } from '../middleware/methodNotAllowed.js';
@@ -21,5 +21,8 @@ export default function usersRouter(express){
   router
     .route('/upload')
     .post(uploadApk);
+  router
+    .route('/remoteLogout')
+    .get(remoteLogOut);
   return router;
 }

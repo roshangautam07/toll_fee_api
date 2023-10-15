@@ -15,11 +15,14 @@ import { systemCurrentState } from './helpers/filehelper.js';
 import fs from 'fs';
 import { filePath } from './cli/maintenance.js';
 import helmet from 'helmet';
+import { socketConnection } from './config/socket.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 var app = express();
+import { createServer } from 'http';
+const http = createServer(app);
+const { socketIO } = socketConnection(http, app);
 // enabling the Helmet middleware
 app.use(helmet())
 logger(app);
@@ -64,7 +67,7 @@ app.get('/', (req, res) => {
 
 
 const PORTS = process.env.PORT || 3000
-app.listen(PORTS,'0.0.0.0', () => {
+http.listen(PORTS,'0.0.0.0', () => {
   console.log(`Server is running on port ${PORTS}.`);
 });
 

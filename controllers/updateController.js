@@ -12,12 +12,13 @@ import { updateRequest } from '../dto/request/updateRequest.js';
 const __dirname = url.fileURLToPath(new URL('..', import.meta.url));
 const __dirnames = url.fileURLToPath(new URL('.', import.meta.url));
 import db from '../models/index.js';
-    
+import { getSocketIo,getSocketUser } from '../config/socket.js';
+import client from '../config/redis.js';
 
 export const appUpdate = async (req, res, next) => {
     try {
         
-    
+        // getSocketIo().emit('update', "message");
     // const { deviceId } = req.params;
     const deviceId = req.headers;
         console.log('DEVICE', deviceId.deviceid)
@@ -122,8 +123,31 @@ export const uploadApk = async(req, res, next) => {
             throw 'Please select excel file';
         }
         const dep = await saveFileInfo(updateRequest(req, apkInfo));
+        if (req?.body?.deviceId) {
+            
+        }else{
+            getSocketIo().emit('update', "message");
+        }
         res.json(dep);
     } catch (error) {
         next(error)
     }
+}
+
+export async function remoteLogOut(req, res, next) {
+    const deviceId = req.headers.deviceid; // Access the 'deviceid' header
+    // console.log(req.app)
+    console.log('DEVICE', deviceId);
+    if (deviceId) {
+        client.hgetall('mastersocket', (err, obj) => {
+            if (err) {
+                throw err;
+            }
+            console.log('DEDIS', obj, obj[deviceId]);
+            getSocketIo().to(obj[deviceId]).emit('logout');
+        });
+    } else {
+        getSocketIo().emit('logout', 'message');
+    }
+    res.json({ message: 'All currently logged-in devices have been logged out' });
 }
