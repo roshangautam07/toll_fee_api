@@ -42,7 +42,7 @@ export const appUpdate = async (req, res, next) => {
     const lastDeploument = await getLastDeployment();
     console.log(lastDeploument);
     const responseData = {
-        apkUrl: `http://143.110.254.245:9006/api/download/${lastDeploument.app_name}`,
+        apkUrl: `http://202.51.1.204:9006/api/download/${lastDeploument.app_name}`,
         forceUpdate: lastDeploument?.is_force_update,
         versionCode: lastDeploument?.versionCode,
         versionName: lastDeploument?.versionName
