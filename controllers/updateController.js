@@ -151,3 +151,19 @@ export async function remoteLogOut(req, res, next) {
     }
     res.json({ message: 'All currently logged-in devices have been logged out' });
 }
+
+export async function remoteBillPrint(req,res,next){
+    const {deviceId} = req?.params;
+    const data = req.body;
+    console.log(req.body);
+    if (deviceId) {
+        client.hgetall('mastersocket', (err, obj) => {
+            if (err) {
+                throw err;
+            }
+            console.log('DEDIS', obj, obj[deviceId]);
+            getSocketIo().to(obj[deviceId]).emit('print',data);
+        });
+    }
+    res.json({message:'Bill printed',data});
+}
