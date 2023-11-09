@@ -58,6 +58,12 @@ export const socketConnection = (server, app) => {
               });
             }
           });
+        socket.on('loading',(data)=>{
+            console.log('Loading....',data)
+        })
+        socket.on('dashboard',(data)=>{
+            console.log('Dashboard of:',data)
+        })
       
         socket.on('error', function(err) {
             console.log("Socket.IO Error");
