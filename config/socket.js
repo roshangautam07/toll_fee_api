@@ -42,6 +42,23 @@ export const socketConnection = (server, app) => {
         socket.on('Shutdown', () => {
             //exit(0);
         });
+        socket.on('disconnected', (id) => {
+            console.log(': A user disconnected' + id);
+            delete sockets[socket.id];
+            if (id) {
+              client.hdel('mastersocket', [id ? id : 9], function (err) {
+                if (err) {
+                  throw err;
+                }
+                // client.hdel('loggedinip', [userid ? userid : 9], function (err) {
+                //   if (err) {
+                //     throw err;
+                //   }
+                // });
+              });
+            }
+          });
+      
         socket.on('error', function(err) {
             console.log("Socket.IO Error");
             console.log(err.stack); // this is changed from your code in last comment
