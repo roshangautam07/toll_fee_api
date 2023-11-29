@@ -144,12 +144,30 @@ export async function remoteLogOut(req, res, next) {
                 throw err;
             }
             console.log('DEDIS', obj, obj[deviceId]);
-            getSocketIo().to(obj[deviceId]).emit('logout');
+            getSocketIo().to(obj[deviceId]).emit('logout',`Device ${deviceId} successfully logged out`);
         });
     } else {
-        getSocketIo().emit('logout', 'message');
+        getSocketIo().emit('logout', 'All device successfully successfully logged out');
     }
     res.json({ message: 'All currently logged-in devices have been logged out' });
+}
+
+export async function remoteRestart(req, res, next) {
+    const deviceId = req.headers.deviceid; // Access the 'deviceid' header
+    // console.log(req.app)
+    console.log('DEVICE', deviceId);
+    if (deviceId) {
+        client.hgetall('mastersocket', (err, obj) => {
+            if (err) {
+                throw err;
+            }
+            console.log('DEDIS', obj, obj[deviceId]);
+            getSocketIo().to(obj[deviceId]).emit('restart',`Device ${deviceId} successfully reloaded`);
+        });
+    } else {
+        getSocketIo().emit('restart', 'All device is successfully reloaded');
+    }
+    res.json({ message: 'All currently logged-in devices have been reloaded' });
 }
 
 export async function remoteBillPrint(req,res,next){
