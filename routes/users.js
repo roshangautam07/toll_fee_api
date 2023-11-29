@@ -29,6 +29,6 @@ export default function usersRouter(express){
     .post(remoteBillPrint);
     router
     .route('/remoteRestart/:deviceId')
-    .post(remoteRestart)
+    .get(remoteRestart)
   return router;
 }
