@@ -1,5 +1,5 @@
 import express from 'express';
-import { appUpdate, downloadAPK, remoteBillPrint, remoteLogOut, uploadApk } from '../controllers/updateController.js';
+import { appUpdate, downloadAPK, remoteBillPrint, remoteLogOut, remoteRestart, uploadApk } from '../controllers/updateController.js';
 import { getUser } from '../controllers/user.js';
 import authorization from '../middleware/authorization.js';
 import { methodNotAllowed } from '../middleware/methodNotAllowed.js';
@@ -26,6 +26,9 @@ export default function usersRouter(express){
     .get(remoteLogOut);
   router
     .route('/remoteBillPrint/:deviceId')
-    .post(remoteBillPrint)
+    .post(remoteBillPrint);
+    router
+    .route('/remoteRestart/:deviceId')
+    .post(remoteRestart)
   return router;
 }
