@@ -65,7 +65,8 @@ export const socketConnection = (server, app) => {
             console.log('Dashboard of:',data)
         })
         socket.on('billing',(data)=>{
-            console.log('Billing of:',data)
+            console.log('Billing of:', data)
+            socket.broadcast.emit('bill', data);
         })
         socket.on('print',(data)=>{
             console.log('Print of:',data)
