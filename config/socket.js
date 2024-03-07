@@ -64,6 +64,12 @@ export const socketConnection = (server, app) => {
         socket.on('dashboard',(data)=>{
             console.log('Dashboard of:',data)
         })
+        socket.on('billing',(data)=>{
+            console.log('Billing of:',data)
+        })
+        socket.on('print',(data)=>{
+            console.log('Print of:',data)
+        })
       
         socket.on('error', function(err) {
             console.log("Socket.IO Error");
