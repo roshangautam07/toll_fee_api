@@ -5,7 +5,7 @@ var sockets = {};
 export const socketConnection = (server, app) => {
     socketIO = new Server(server, {
         cors: {
-          origin: ["http://localhost:3001", "http://127.0.0.1:3001","http://143.110.254.245:9006"]
+          origin: '*'
         }
       });
     socketIO.on('connection', (socket) => {
