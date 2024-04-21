@@ -61,6 +61,10 @@ export const socketConnection = (server, app) => {
         socket.on('loading',(data)=>{
             console.log('Loading....',data)
         })
+        socket.on('error',(data)=>{
+            console.log('Error....', data);
+            socket.broadcast.emit('errorBill', data);
+        })
         socket.on('dashboard',(data)=>{
             console.log('Dashboard of:',data)
         })
