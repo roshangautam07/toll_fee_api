@@ -61,7 +61,7 @@ export const socketConnection = (server, app) => {
         socket.on('loading',(data)=>{
             console.log('Loading....',data)
         })
-        socket.on('error',(data)=>{
+        socket.on('billingError',(data)=>{
             console.log('Error....', data);
             socket.broadcast.emit('errorBill', data);
         })
