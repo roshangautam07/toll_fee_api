@@ -45,7 +45,9 @@ export const appUpdate = async (req, res, next) => {
         apkUrl: `${process.env.BASE_URL}:${process.env.PORT}/api/download/${lastDeploument.app_name}`,
         forceUpdate: lastDeploument?.is_force_update,
         versionCode: lastDeploument?.versionCode,
-        versionName: lastDeploument?.versionName
+        versionName: lastDeploument?.versionName,
+        remarks: lastDeploument?.remarks,
+        is_force_update:lastDeploument?.is_force_update
     };
     // fs.readFile(`${__dirnames}/${req.params.id}`, (err, data) => {
     //     if (err) return res.status(500).json({message:err})
