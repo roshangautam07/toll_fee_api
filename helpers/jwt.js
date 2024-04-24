@@ -12,7 +12,18 @@ export   function generateJwtToken(user) {
       { expiresIn: dbConfig.accessTokenExpire }
     );
 }
-  
+export const authSocketMiddleware = (socket, next) => {
+  // since you are sending the token with the query
+  const token = socket.handshake.query?.token;
+  try {
+    const decoded = Jwt.verify(token, dbConfig.secret);
+    socket.user = decoded;
+  } catch (err) {
+    return next(new Error("NOT AUTHORIZED"));
+  }
+  next();
+};
+
 export function verifyAccessToken(token) {
   // return Jwt.verify(token, dbConfig.secret, (err, decode) => {
   //   new Promise((resolve, reject) => {

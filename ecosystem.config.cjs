@@ -12,7 +12,7 @@ module.exports = {
     //    min_uptime: 5000,
     autorestart: true,
     watch: true,
-    name: "toll_fee",
+    name: "application",
     instances: 4,
     exec_mode: "cluster",
     env: {

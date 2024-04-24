@@ -1,13 +1,38 @@
+import { authSocketMiddleware } from '../helpers/jwt.js';
+import loggers from './logger.js';
 import client from './redis.js';
 import { Server } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
 let socketIO;
 var sockets = {};
-export const socketConnection = (server, app) => {
-    socketIO = new Server(server, {
+export const socketRedis = (server)=>{
+    const socks = new Server(server, {
+        // transports:[
+        //     'websocket'
+        //   ],
         cors: {
-          origin: '*'
+          origin: "*"
         }
       });
+    const pubClient = client;
+    const subClient = pubClient.duplicate();
+    
+    socks.adapter(createAdapter(pubClient, subClient));
+    
+    // socks.listen(3000);
+    
+    
+    
+    return socks;
+    
+    }
+export const socketConnection = (server, app) => {
+    // socketIO = new Server(server, {
+    //     cors: {
+    //       origin: '*'
+    //     }
+    //   });
+    socketIO = socketRedis(server);
     socketIO.on('connection', (socket) => {
         const user = { socketC: socket };
         console.log(`⚡: ${socket.id} user just connected!`);
@@ -64,6 +89,9 @@ export const socketConnection = (server, app) => {
         socket.on('billingError',(data)=>{
             console.log('Error....', data);
             socket.broadcast.emit('errorBill', data);
+            loggers.error('Billing error', {
+                ...data
+            })
         })
         socket.on('dashboard',(data)=>{
             console.log('Dashboard of:',data)
@@ -82,6 +110,9 @@ export const socketConnection = (server, app) => {
         });
 
     });
+    // socketIO.use((socket, next) => {
+    //     authSocketMiddleware(socket, next);
+    // })
     app.set("io", socketIO);
     app.set('sockets', sockets);
 

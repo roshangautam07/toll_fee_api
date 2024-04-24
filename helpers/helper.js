@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 export function systemCurrentState(fs, filePath) {
     try {
     fs.readFile(filePath, 'utf8', function(err, data){
@@ -17,4 +18,8 @@ export function systemCurrentState(fs, filePath) {
 } catch (e) {
         console.log(e.message);
 }
+}
+export function today() {
+    const day = dayjs().format('YYYY-MM-DD');
+    return day;
 }
