@@ -27,12 +27,12 @@ export const socketRedis = (server)=>{
     
     }
 export const socketConnection = (server, app) => {
-    // socketIO = new Server(server, {
-    //     cors: {
-    //       origin: '*'
-    //     }
-    //   });
-    socketIO = socketRedis(server);
+    socketIO = new Server(server, {
+        cors: {
+          origin: '*'
+        }
+      });
+    // socketIO = socketRedis(server);
     socketIO.on('connection', (socket) => {
         const user = { socketC: socket };
         console.log(`⚡: ${socket.id} user just connected!`);
