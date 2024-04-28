@@ -11,7 +11,7 @@ import errorHandler from './middleware/errorHandller.js';
 import notFound from './middleware/notFound.js';
 import bodyParser from 'body-parser';
 import logger from './helpers/logger.js';
-import { systemCurrentState } from './helpers/filehelper.js';
+import { createFile, systemCurrentState } from './helpers/filehelper.js';
 import fs from 'fs';
 import { filePath } from './cli/maintenance.js';
 import helmet from 'helmet';
@@ -23,7 +23,22 @@ var app = express();
 import { createServer } from 'http';
 const http = createServer(app);
 const { socketIO } = socketConnection(http, app);
+import fsExtra from 'fs-extra';
+import { today } from './helpers/helper.js';
 // enabling the Helmet middleware
+const options = {
+  mode: 0o2775
+}
+  fsExtra.ensureDir(`${__dirname}/log/jsonlog`, options).then((data)=>{
+
+  }).catch(e=>{
+    console.log('Error');
+  })
+createFile(fsExtra,`${__dirname}/log/jsonlog/${today()}.json`).then((data)=>{
+  console.log('File created')
+}).catch(e=>{
+  console.log('error')
+})
 app.use(helmet())
 logger(app);
 // view engine setup

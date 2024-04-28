@@ -2,6 +2,7 @@
 .env
 .next
 /log
+/logs
 coverage
 /public/static/
 /public/frontend/*

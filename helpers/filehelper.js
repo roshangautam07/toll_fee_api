@@ -20,3 +20,12 @@ export function systemCurrentState(fs, filePath,fn) {
         console.log(e.message);
 }
 }
+
+export async function createFile (fs,f) {
+    try {
+      await fs.ensureFile(f)
+      console.log('File created!')
+    } catch (err) {
+      console.error(err)
+    }
+  }
