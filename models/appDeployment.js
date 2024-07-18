@@ -10,6 +10,15 @@ export default function AppDeployment(sequelize, Sequelize) {
                 type: Sequelize.STRING,
                 allowNull: true,
             },
+            device_vendor: {
+                type: Sequelize.ENUM,
+              allowNull: false,
+              defaultValue: 'summni',
+              values: [
+                'summni',
+                'tactilion'
+                ]
+            },
             versionCode: {
                 type: Sequelize.INTEGER,
                 allowNull: true,

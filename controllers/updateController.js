@@ -17,21 +17,9 @@ import client from '../config/redis.js';
 
 export const appUpdate = async (req, res, next) => {
     try {
-        
+        const { device_vendor } = req.headers;
         // getSocketIo().emit('update', "message");
     // const { deviceId } = req.params;
-    const deviceId = req.headers;
-        console.log('DEVICE', deviceId.deviceid)
-        const device = deviceId.deviceid ?? 1;
-        const deviceList = await db.DeviceInformation.findOne({
-            where: {
-                serial_number: device,
-                status:'active'
-            }
-        });
-        if (!deviceList) {
-            return res.json({message:'No update avaliable'})
-        }
    
     const response = {
         apkUrl: "http://143.110.254.245:9006/api/download/toll-fee-2.0.apk",
@@ -39,10 +27,10 @@ export const appUpdate = async (req, res, next) => {
         versionCode: "2",
         versionName: "2.0"
     };
-    const lastDeploument = await getLastDeployment();
+    const lastDeploument = await getLastDeployment(device_vendor);
     console.log(lastDeploument);
     const responseData = {
-        apkUrl: `${process.env.BASE_URL}:${process.env.PORT}/api/download/${lastDeploument.app_name}`,
+        apkUrl: `${process.env.BASE_URL}:${process.env.PORT}/api/download/${lastDeploument?.app_name}`,
         forceUpdate: lastDeploument?.is_force_update,
         versionCode: lastDeploument?.versionCode,
         versionName: lastDeploument?.versionName,
@@ -55,8 +43,9 @@ export const appUpdate = async (req, res, next) => {
     //     return res.json(RE);
 
     // });
-        return res.json(responseData);
+        return res.json(lastDeploument ? responseData :{message:'No update avaliable'});
     } catch (error) {
+        console.log(error)
         next(error);
     }
 }
@@ -69,16 +58,6 @@ export const  downloadAPK = async(req, res, next) =>{
 
     const deviceId = req.headers;
     console.log(apkInfo.versionCode);
-    const device = deviceId.deviceid ?? 1;
-        const deviceList = await db.DeviceInformation.findOne({
-            where: {
-                serial_number: device,
-                status:'active'
-            }
-        });
-        if (!deviceList) {
-            return res.json({message:'No update avaliable'})
-        }
   fs.access(paths, fs.constants.F_OK, function (error) {
     if (error) {
       return res.status(500).json({message:error})
@@ -132,6 +111,7 @@ export const uploadApk = async(req, res, next) => {
         }
         res.json(dep);
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }

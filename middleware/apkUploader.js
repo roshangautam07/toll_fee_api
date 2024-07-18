@@ -23,7 +23,7 @@ const storage = diskStorage({
     console.log(file.originalname);
     cb(
       null,
-      `${Date.now()}-toll-fee-${randomBytes(16).toString('hex')}-${
+      `${Date.now()}-nepse-${randomBytes(16).toString('hex')}-${
         file.originalname
       }`
     );
