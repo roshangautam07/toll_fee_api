@@ -1,7 +1,7 @@
 export function updateRequest(req, apkInfo) {
     return {
         app_name: req?.file?.filename,
-        device_vendor:req?.device_vendor,
+        device_vendor:req?.body?.device_vendor,
         versionCode: apkInfo?.versionCode,
         versionName: apkInfo?.versionName,
         compileSdkVersion: apkInfo?.compileSdkVersion,
