@@ -51,7 +51,9 @@ export const appUpdate = async (req, res, next) => {
     }
 }
 
-export const  downloadAPK = async(req, res, next) =>{
+export const downloadAPK = async (req, res, next) => {
+    console.log('HEADER',req.headers)
+    
     const paths = `${__dirname}/public/static/`;
     const file = 'toll-fee-1.0.apk';
     const apk = new Apk.Apk(paths + req.params.id);
