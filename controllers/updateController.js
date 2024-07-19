@@ -17,6 +17,7 @@ import client from '../config/redis.js';
 
 export const appUpdate = async (req, res, next) => {
     try {
+        console.log(req.headers)
         const { device_vendor } = req.headers;
         // getSocketIo().emit('update', "message");
     // const { deviceId } = req.params;
