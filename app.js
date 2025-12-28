@@ -66,6 +66,10 @@ app.use((req, res, next) => {
     next();
   })
 })
+app.get('/', (req, res) => {
+  res.json('hello')
+
+})
 routes(app, express);
 
 app.disable('x-powered-by');
@@ -75,10 +79,7 @@ app.use(notFound);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-app.get('/', (req, res) => {
-  res.json('hello')
 
-})
 
 
 const PORTS = process.env.PORT || 3000

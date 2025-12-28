@@ -3,6 +3,7 @@ import loggers from './logger.js';
 import client from './redis.js';
 import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
+import { insertDocument } from './mongo.js';
 let socketIO;
 var sockets = {};
 export const socketRedis = (server)=>{
@@ -61,7 +62,7 @@ export const socketConnection = (server, app) => {
             socket.broadcast.emit('login', data);
         });
         socket.on('disconnect', () => {
-            console.log('🔥: A user disconnected');
+            console.log('🔥: A user disconnected:');
             delete sockets[socket.id];
         });
         socket.on('Shutdown', () => {
@@ -99,6 +100,13 @@ export const socketConnection = (server, app) => {
         socket.on('billing',(data)=>{
             console.log('Billing of:', data)
             socket.broadcast.emit('bill', data);
+        })
+         socket.on('api',async(data)=>{
+             console.log('API of:', data)
+             await insertDocument(data)
+            //   loggers.error('API error', {
+            //     ...data
+            // })
         })
         socket.on('print',(data)=>{
             console.log('Print of:',data)
