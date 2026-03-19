@@ -1,5 +1,5 @@
 import express from 'express';
-import { appUpdate, downloadAPK, remoteBillPrint, remoteLogOut, remoteRestart, uploadApk } from '../controllers/updateController.js';
+import { appUpdate, downloadAPK, generateToken, remoteBillPrint, remoteLogOut, remoteRestart, uploadApk } from '../controllers/updateController.js';
 import { getUser } from '../controllers/user.js';
 import authorization from '../middleware/authorization.js';
 import { methodNotAllowed } from '../middleware/methodNotAllowed.js';
@@ -29,6 +29,9 @@ export default function usersRouter(express){
     .post(remoteBillPrint);
     router
     .route('/remoteRestart/:deviceId')
-    .get(remoteRestart)
+      .get(remoteRestart)
+  router
+    .route('/generate')
+    .get(generateToken)
   return router;
 }

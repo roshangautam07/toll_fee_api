@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
-mongoose.connect(`mongodb://${process.env.MONGO_DB_HOST || '127.0.0.1'}:${process.env.MONGO_DB_PORT || '27017'}/${process.env.MONGO_DB_COLLECTION}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+if (process.env.MONGO_DB_LOG == 'true') {
+    mongoose.connect(`mongodb://${process.env.MONGO_DB_HOST || '127.0.0.1'}:${process.env.MONGO_DB_PORT || '27017'}/${process.env.MONGO_DB_COLLECTION}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Fail to connect MONGODB:'));
-db.once('open', function() {
-    console.log('\x1b[32m', 'Mongo DB connected', '\x1b[0m');
-});
-
+    const db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'Fail to connect MONGODB:'));
+    db.once('open', function () {
+        console.log('\x1b[32m', 'Mongo DB connected', '\x1b[0m');
+    });
+}
 const FlexibleModel = mongoose.model('event-logs', new mongoose.Schema({}, { strict: false }));
 
 export const insertDocument = async (document) => {

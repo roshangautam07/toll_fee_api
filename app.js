@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
 var app = express();
 import { createServer } from 'http';
 const http = createServer(app);
-const { socketIO } = socketConnection(http, app);
+// const { socketIO } = socketConnection(http, app);
 import fsExtra from 'fs-extra';
 import { today } from './helpers/helper.js';
 // enabling the Helmet middleware
