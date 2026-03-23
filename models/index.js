@@ -11,6 +11,8 @@ import TransactionInfo from './TransactionInfo.js';
 import sequelize from '../config/mysql.js';
 import AppDeployment from './appDeployment.js';
 import DeviceInformation from './deviceInformation.js';
+import ParameterDefinations from './paramDefinations.js';
+import ParameterValues from './paramValues.js';
 import fs from 'fs';
 import { systemCurrentState } from '../helpers/filehelper.js';
 import { filePath } from '../cli/maintenance.js';
@@ -38,8 +40,20 @@ const db = {};
 // db.TransactionInfo = TransactionInfo(sequelize, Sequelize);
 db.AppDeployment = AppDeployment(sequelize, Sequelize);
 db.DeviceInformation = DeviceInformation(sequelize, Sequelize);
-
-
+db.ParameterDefinations = ParameterDefinations(sequelize, Sequelize);
+db.ParameterValues = ParameterValues(sequelize, Sequelize);
+db.ParameterDefinations.hasMany(db.ParameterValues, {
+  foreignKey: {
+    name: 'paramDefId',
+    field: 'paramDefId',
+  },
+});
+db.ParameterValues.belongsTo(db.ParameterDefinations, {
+  foreignKey: {
+    name: 'paramDefId',
+    field: 'paramDefId',
+  },
+});
 
 // db.BillingCategory.belongsTo(db.Branch, {
 //   foreignKey: {
