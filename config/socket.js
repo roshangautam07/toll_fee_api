@@ -116,7 +116,22 @@ export const socketConnection = (server, app) => {
             console.log("Socket.IO Error");
             console.log(err.stack); // this is changed from your code in last comment
         });
+// Join a specific room based on Device ID
+    socket.on('join-room', (roomId) => {
+        socket.join(roomId);
+    });
 
+    // Forward control commands (clicks/swipes) to Android
+    socket.on('control-command', (data) => {
+        socketIO.to(data.roomId).emit('execute-command', data);
+    });
+    socket.on('screen-frame', (data) => {
+    socketIO.to(data.roomId).emit('screen-frame', data);
+    });
+    // Forward WebRTC signaling data
+    socket.on('signal', (data) => {
+        socketIO.to(data.roomId).emit('signal', data);
+    });
     });
     // socketIO.use((socket, next) => {
     //     authSocketMiddleware(socket, next);
