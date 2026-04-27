@@ -1,5 +1,5 @@
 import uWS from './uWebSockets.js-20.30.0/uws.js';
-import client from './config/redis.js';
+// import client from './config/redis.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const decoder = new TextDecoder('utf-8');
@@ -128,7 +128,7 @@ export const socketConnection = (port = 3000) => {
                     console.log('IDS', userId);
                     sockets[userId] = ws.id;
                     ws.userId = userId;
-                    saveSocketMap(userId, ws.id);
+                    // saveSocketMap(userId, ws.id);
                     console.log('UserIddd', userId);
                     console.log('socks', sockets);
                     break;
@@ -235,7 +235,7 @@ export const socketConnection = (port = 3000) => {
             wsMap.delete(ws.id);
             if (ws.userId) {
                 delete sockets[ws.userId];
-                removeSocketMap(ws.userId);
+                // removeSocketMap(ws.userId);
             }
         },
     });
