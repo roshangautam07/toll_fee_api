@@ -6,9 +6,9 @@ const decoder = new TextDecoder('utf-8');
 
 // ─── State ────────────────────────────────────────────────────────────────────
 let uwsApp;                      // uWS app instance (set in socketConnection)
-let sockets   = {};              // userId  → socketId
-let wsMap     = new Map();       // socketId → ws object
-let rooms     = new Map();       // roomId   → Set<socketId>
+let sockets = {};              // userId  → socketId
+let wsMap = new Map();       // socketId → ws object
+let rooms = new Map();       // roomId   → Set<socketId>
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const send = (ws, obj) => {
@@ -47,7 +47,7 @@ const relayBinaryFrame = (ws, rawMsg) => {
         return;
     }
 
-    const roomIdLen  = view.getUint8(1);
+    const roomIdLen = view.getUint8(1);
     const headerSize = 2 + roomIdLen;
     if (view.byteLength < headerSize + 1) return;   // need at least 1 JPEG byte
 
@@ -85,9 +85,9 @@ export const socketConnection = (port = 3000) => {
     uwsApp = uWS.App();
 
     uwsApp.ws('/ws', {
-        compression:      uWS.SHARED_COMPRESSOR,
+        compression: uWS.SHARED_COMPRESSOR,
         maxPayloadLength: 16 * 1024 * 1024,
-        idleTimeout:      60,
+        idleTimeout: 60,
 
         // ── open ────────────────────────────────────────────────────────────
         open(ws) {
@@ -117,7 +117,7 @@ export const socketConnection = (port = 3000) => {
                 console.error('Bad JSON from', ws.id);
                 return;
             }
-
+            console.log('data', data);
             const { event } = data;
 
             switch (event) {
@@ -181,11 +181,41 @@ export const socketConnection = (port = 3000) => {
 
                 // Mirrors: socket.on('join-room', roomId => socket.join(roomId))
                 case 'join-room': {
-                    const { roomId } = data;
+                    const { roomId, role } = data;
+
+                    // 1. Validation: Ensure role is provided
+                    if (role !== 'android-screen' && role !== 'web-screen') {
+                        send(ws, { event: 'error', message: 'Invalid role specified' });
+                        break;
+                    }
+
+                    // 2. Initialize room state if it doesn't exist
+                    if (!rooms.has(roomId)) {
+                        rooms.set(roomId, { 'android-screen': null, 'web-screen': null });
+                    }
+
+                    const currentRoom = rooms.get(roomId);
+
+                    // 3. Check if the slot for this role is already taken
+                    if (currentRoom[role]) {
+                        console.warn(`Join rejected: Room ${roomId} already has a ${role}`);
+                        send(ws, {
+                            event: 'room-full',
+                            message: `A ${role} is already connected to this room.`
+                        });
+                        break;
+                    }
+
+                    // 4. Assign the slot and subscribe
+                    currentRoom[role] = ws.id;
+                    ws.roomId = roomId; // Store for easy cleanup
+                    ws.role = role;     // Store for easy cleanup
+
                     ws.subscribe(roomId);
-                    if (!rooms.has(roomId)) rooms.set(roomId, new Set());
-                    rooms.get(roomId).add(ws.id);
-                    console.log(`${ws.id} joined room ${roomId}`);
+                    console.log(`✅ ${ws.id} joined room ${roomId} as ${role}`);
+
+                    // Optional: Notify the client of success
+                    send(ws, { event: 'joined', roomId, role });
                     break;
                 }
 
@@ -226,16 +256,26 @@ export const socketConnection = (port = 3000) => {
         // ── close ────────────────────────────────────────────────────────────
         close(ws, code, message) {
             console.log('🔥: A user disconnected:', ws.id);
-
-            rooms.forEach((members, roomId) => {
-                members.delete(ws.id);
-                if (members.size === 0) rooms.delete(roomId);
-            });
-
+        
+            // Clean up room slots based on the stored role
+            if (ws.roomId && ws.role && rooms.has(ws.roomId)) {
+                const roomData = rooms.get(ws.roomId);
+                
+                // Clear the specific role slot
+                if (roomData[ws.role] === ws.id) {
+                    roomData[ws.role] = null;
+                    console.log(`Slot ${ws.role} vacated in room ${ws.roomId}`);
+                }
+        
+                // If both slots are null, delete the room entry to save memory
+                if (!roomData['android-screen'] && !roomData['web-screen']) {
+                    rooms.delete(ws.roomId);
+                }
+            }
+        
             wsMap.delete(ws.id);
             if (ws.userId) {
                 delete sockets[ws.userId];
-                // removeSocketMap(ws.userId);
             }
         },
     });

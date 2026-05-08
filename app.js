@@ -24,6 +24,8 @@ import { createServer } from 'http';
 const http = createServer(app);
 const { socketIO } = socketConnection(http, app);
 import fsExtra from 'fs-extra';
+import cors from 'cors';
+
 import { today } from './helpers/helper.js';
 // enabling the Helmet middleware
 const options = {
@@ -39,7 +41,10 @@ createFile(fsExtra,`${__dirname}/log/jsonlog/${today()}.json`).then((data)=>{
 }).catch(e=>{
   console.log('error')
 })
-app.use(helmet())
+// app.use(helmet())
+app.use(cors({
+   origin: "*"
+}));
 logger(app);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,6 +55,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'frontend')));
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(
   bodyParser.urlencoded({
@@ -66,10 +72,7 @@ app.use((req, res, next) => {
     next();
   })
 })
-app.get('/', (req, res) => {
-  res.json('hello')
 
-})
 routes(app, express);
 
 app.disable('x-powered-by');
